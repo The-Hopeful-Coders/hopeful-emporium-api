@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
+//require the productSchema for our subdocument relationship
+const productSchema = require('./product')
 
 const cartSchema = new mongoose.Schema({
-  product: {
-    type: String,
-    required: true
-  },
+  products: [productSchema],
   count: {
     type: Number,
     required: true
