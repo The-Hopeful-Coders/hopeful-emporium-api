@@ -1,7 +1,7 @@
 // Express docs: http://expressjs.com/en/api.html
 const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
-const passport = require('passport')
+// const passport = require('passport')
 
 // pull in Mongoose model for products
 //const Cart = require('../models/cart')
@@ -15,7 +15,7 @@ const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 // we'll use this function to send 401 when a user tries to modify a resource
 // that's owned by someone else
-const requireOwnership = customErrors.requireOwnership
+// const requireOwnership = customErrors.requireOwnership
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { product: { title: '', text: 'foo' } } -> { product: { text: 'foo' } }
@@ -23,7 +23,7 @@ const removeBlanks = require('../../lib/remove_blank_fields')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
-const requireToken = passport.authenticate('bearer', { session: false })
+// const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
@@ -46,7 +46,7 @@ router.get('/products', (req, res, next) => {
 
 // SHOW
 // GET /products/5a7db6c74d55bc51bdf39793
-router.get('/products/:id', requireToken, (req, res, next) => {
+router.get('/products/:id', (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Product.findById(req.params.id)
     .then(handle404)
@@ -74,18 +74,10 @@ router.post('/products', (req, res, next) => {
 
 // UPDATE
 // PATCH /products/5a7db6c74d55bc51bdf39793
-router.patch('/products/:id', requireToken, removeBlanks, (req, res, next) => {
-  // if the client attempts to change the `owner` property by including a new
-  // owner, prevent that by deleting that key/value pair
-  delete req.body.product.owner
-
+router.patch('/products/:id', removeBlanks, (req, res, next) => {
   Product.findById(req.params.id)
     .then(handle404)
     .then(product => {
-      // pass the `req` object and the Mongoose record to `requireOwnership`
-      // it will throw an error if the current user isn't the owner
-      requireOwnership(req, product)
-
       // pass the result of Mongoose's `.update` to the next `.then`
       return product.updateOne(req.body.product)
     })
@@ -97,12 +89,10 @@ router.patch('/products/:id', requireToken, removeBlanks, (req, res, next) => {
 
 // DESTROY
 // DELETE /products/5a7db6c74d55bc51bdf39793
-router.delete('/products/:id', requireToken, (req, res, next) => {
+router.delete('/products/:id', (req, res, next) => {
   Product.findById(req.params.id)
     .then(handle404)
     .then(product => {
-      // throw an error if current user doesn't own `product`
-      requireOwnership(req, product)
       // delete the product ONLY IF the above didn't throw
       product.deleteOne()
     })
