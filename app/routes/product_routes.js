@@ -4,7 +4,6 @@ const express = require('express')
 // const passport = require('passport')
 
 // pull in Mongoose model for products
-//const Cart = require('../models/cart')
 const Product = require('../models/product')
 
 // this is a collection of methods that help us detect situations when we need
