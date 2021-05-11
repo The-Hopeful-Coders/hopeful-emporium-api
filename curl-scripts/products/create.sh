@@ -1,4 +1,4 @@
-# NAME="Dirty Phone Booth" DESCRIPTION="Doesn't make phone calls" PRICE=999.99 sh curl-scripts/products/create.sh
+# NAME="Dirty Phone Booth" DESCRIPTION="Doesn't make phone calls" PRICE=999.99 sh PRODUCT_COUNT=1 curl-scripts/products/create.sh
 # NAME="Regular Phone Booth" DESCRIPTION="Does make phone calls" PRICE=2999.99 sh curl-scripts/products/create.sh
 # NAME="Tardis Phone Booth" DESCRIPTION="A timelord's phonebooth" PRICE=999999.99 sh curl-scripts/products/create.sh
 
@@ -13,7 +13,8 @@ curl "${API}${URL_PATH}" \
     "product": {
       "name": "'"${NAME}"'",
       "description": "'"${DESCRIPTION}"'",
-      "price": "'"${PRICE}"'"
+      "price": "'"${PRICE}"'",
+      "productCount" "'"${PRODUCT_COUNT}"'"
     }
   }'
 

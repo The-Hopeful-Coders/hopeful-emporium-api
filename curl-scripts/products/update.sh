@@ -13,7 +13,8 @@ curl "${API}${URL_PATH}/${ID}" \
     "product": {
       "name": "'"${NAME}"'",
       "description": "'"${DESCRIPTION}"'",
-      "price": "'"${PRICE}"'"
+      "price": "'"${PRICE}"'",
+      "productCount" "'"${PRODUCT_COUNT}"'"
     }
   }'
 
