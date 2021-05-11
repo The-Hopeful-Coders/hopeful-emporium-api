@@ -12,6 +12,10 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  productCount: {
+    type: Number,
+    min: 1
   }
 }, {
   timestamps: true
