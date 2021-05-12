@@ -3,7 +3,7 @@
 API="http://localhost:4741"
 URL_PATH="/products"
 
-# ID="609a8751c2b07a7268f64463" NAME="Tardis Phone Booth" DESCRIPTION="A timelord's phonebooth" PRICE=5000000.99 PRODUCT_COUNT=1 sh curl-scripts/products/update.sh
+# ID="609a8751c2b07a7268f64463" NAME="Tardis Phone Booth" DESCRIPTION="A timelord's phonebooth" PRICE=5000000.99 sh curl-scripts/products/update.sh
 
 curl "${API}${URL_PATH}/${ID}" \
   --include \
@@ -13,8 +13,7 @@ curl "${API}${URL_PATH}/${ID}" \
     "product": {
       "name": "'"${NAME}"'",
       "description": "'"${DESCRIPTION}"'",
-      "price": "'"${PRICE}"'",
-      "productCount": "'"${PRODUCT_COUNT}"'"
+      "price": "'"${PRICE}"'"
     }
   }'
 
