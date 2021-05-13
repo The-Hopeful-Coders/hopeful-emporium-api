@@ -29,6 +29,7 @@ const router = express.Router()
 router.post('/purchases', requireToken, (req, res, next) => {
   // set owner of new purchase to be current user
   req.body.purchase.owner = req.user.id
+  // console.log('This is the req.body', req.body)
   Purchase.create(req.body.purchase)
     // respond to succesful `create` with status 201 and JSON of new "purchase"
     .then(purchase => {
