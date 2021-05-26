@@ -72,22 +72,22 @@ router.delete('/purchases/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// // INDEX (show user their purchase history - possible V2)
-// // GET /examples
-// router.get('/purchases', requireToken, (req, res, next) => {
-//   const id = req.user.id
-//   Purchase.find({ owner: id })
-//     .populate('product')
-//     .then(purchases => {
-//       // `purchases` will be an array of Mongoose documents
-//       // we want to convert each one to a POJO, so we use `.map` to
-//       // apply `.toObject` to each one
-//       return purchases.map(purchase => purchase.toObject())
-//     })
-//     // respond with status 200 and JSON of the purchases
-//     .then(purchases => res.status(200).json({ purchases: purchases }))
-//     // if an error occurs, pass it to the handler
-//     .catch(next)
-// })
+// INDEX (show user an index of their purchase history)
+// GET /examples
+router.get('/purchases', requireToken, (req, res, next) => {
+  const id = req.user.id
+  Purchase.find({ owner: id })
+    .populate('product')
+    .then(purchases => {
+      // `purchases` will be an array of Mongoose documents
+      // we want to convert each one to a POJO, so we use `.map` to
+      // apply `.toObject` to each one
+      return purchases.map(purchase => purchase.toObject())
+    })
+    // respond with status 200 and JSON of the purchases
+    .then(purchases => res.status(200).json({ purchases: purchases }))
+    // if an error occurs, pass it to the handler
+    .catch(next)
+})
 
 module.exports = router
