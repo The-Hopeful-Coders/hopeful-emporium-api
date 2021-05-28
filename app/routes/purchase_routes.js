@@ -16,6 +16,8 @@ const handle404 = customErrors.handle404
 // that's owned by someone else
 const requireOwnership = customErrors.requireOwnership
 
+const removeBlanks = require('../../lib/remove_blank_fields')
+
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -50,6 +52,31 @@ router.get('/purchases/:id', requireToken, (req, res, next) => {
     .populate('product')
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "purchase" JSON
+    .then(purchase => res.status(200).json({ purchase: purchase.toObject() }))
+    // if an error occurs, pass it to the handler
+    .catch(next)
+})
+
+// UPDATE
+// PATCH /examples/5a7db6c74d55bc51bdf39793
+router.patch('/purchases/:id', requireToken, removeBlanks, (req, res, next) => {
+  // if the client attempts to change the `owner` property by including a new
+  // owner, prevent that by deleting that key/value pair
+  delete req.body.purchase.owner
+
+  Purchase.findById(req.params.id)
+    .then(handle404)
+    .then(purchase => {
+      // pass the `req` object and the Mongoose record to `requireOwnership`
+      // it will throw an error if the current user isn't the owner
+      requireOwnership(req, purchase)
+
+      // pass the result of Mongoose's `.update` to the next `.then`
+      purchase.shipping = req.body.purchase.shipping
+      return purchase.save()
+    })
+    .then(() => Purchase.findById(req.params.id).populate('product'))
+    // if that succeeded, return 204 and no JSON
     .then(purchase => res.status(200).json({ purchase: purchase.toObject() }))
     // if an error occurs, pass it to the handler
     .catch(next)
