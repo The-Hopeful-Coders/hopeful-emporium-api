@@ -72,10 +72,12 @@ router.patch('/purchases/:id', requireToken, removeBlanks, (req, res, next) => {
       requireOwnership(req, purchase)
 
       // pass the result of Mongoose's `.update` to the next `.then`
-      return purchase.updateOne(req.body.purchase)
+      purchase.shipping = req.body.purchase.shipping
+      return purchase.save()
     })
+    .then(() => Purchase.findById(req.params.id).populate('product'))
     // if that succeeded, return 204 and no JSON
-    .then(() => res.sendStatus(204))
+    .then(purchase => res.status(200).json({ purchase: purchase.toObject() }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
